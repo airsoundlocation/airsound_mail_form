@@ -1,7 +1,427 @@
 <!DOCTYPE html>
-<html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Confirmation de Réservation</title>
+    <link rel="icon" type="image/png" href="https://airsoundlocation.ch/wp-content/uploads/2021/12/cropped-favicon.png">
+    <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;600&display=swap" rel="stylesheet">
+    <!-- Material-UI -->
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Roboto:300,400,500,700&display=swap" />
+    <link rel="stylesheet" href="https://fonts.googleapis.com/icon?family=Material+Icons" />
+    <script src="https://unpkg.com/@material-ui/core@latest/umd/material-ui.production.min.js"></script>
+  
+    <style>
+        .spacing { margin-bottom: 1em; }
+        body:not(#output) {
+            background-color: rgb(18, 18, 37);
+            color: white;
+            font-family: 'Montserrat', sans-serif;
+        }
+        #output {
+            background-color: white;
+            padding: 20px;
+            border-radius: 4px;
+            color: initial;
+            font-family: initial;
+        }
+
+        button {
+            font-family: 'Montserrat', sans-serif;
+        }
+
+        label {
+            font-size: 15px;
+            font-weight: 600;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+        }
+
+        input, select {
+            font-family: 'Montserrat', sans-serif;
+        }
+
+        input[type="radio"] {
+            appearance: none;
+            width: 20px;
+            height: 20px;
+            background-color: white;
+            border: 1px solid #3f51b5;
+            border-radius: 50%;
+            cursor: pointer;
+            position: relative;
+        }
+
+        input[type="radio"]:checked::after {
+            content: "";
+            display: block;
+            width: 12px;
+            height: 12px;
+            background-color: #3f51b5;
+            border-radius: 50%;
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+        }
+
+    </style>
+</head>
 <body>
-<h1>Hello World</h1>
-<p>I'm hosted with GitHub Pages.</p>
+
+    <div style="text-align: center; margin-bottom: 40px; margin-top: 60px;">
+        <img src="https://airsoundlocation.ch/wp-content/uploads/2023/04/AirSoundwhite-1.png" alt="Airsound Logo" width="200">
+    </div>
+
+    <form id="emailForm" onsubmit="return generateEmail();" style="max-width: 400px; margin: auto; font-family: Roboto, sans-serif;">
+        <div style="display: flex; flex-direction: column; gap: 15px;">
+
+            <div style="margin-top: 20px;">
+                <label>Civilité :</label>
+                <div style="display: flex; align-items: center; gap: 10px; margin-top: 10px; margin-bottom: 10px;">
+                    <div>
+                        <input type="radio" id="male" name="gender" value="Monsieur" checked>
+                        <label for="male">Monsieur</label>
+                    </div>
+                    <div>
+                        <input type="radio" id="female" name="gender" value="Madame">
+                        <label for="female">Madame</label>
+                    </div>
+                    <div>
+                        <input type="radio" id="unspecified" name="gender" value="">
+                        <label for="unspecified">Autre</label>
+                    </div>
+                </div>
+            </div>
+            
+            <label for="names">Nom Prénom (Ou entreprise) :</label>
+            <input type="text" id="names" name="names" placeholder="Nom suivi du prénom" style="padding: 10px; border: 1px solid #ccc; border-radius: 4px;">
+
+            <label for="time">Heure :</label>
+            <input type="text" id="time" name="time" placeholder="hh:mm" style="padding: 10px; border: 1px solid #ccc; border-radius: 4px;">
+            
+            <label for="date">Date :</label>
+            <input type="text" id="date" name="date" placeholder="Vendredi 31 décembre" style="padding: 10px; border: 1px solid #ccc; border-radius: 4px;">
+            
+            <label for="address">Adresse :</label>
+            <select id="address" name="address" style="padding: 10px; border: 1px solid #ccc; border-radius: 4px;">
+              <option value="Avenue du Silo 5, 1020 RENENS|https://goo.gl/maps/Ne67CABE8G7xaLwW8">Avenue du Silo 5, 1020 RENENS</option>
+              <option value="Chemin du Vallon 17, 1030 BUSSIGNY|https://goo.gl/maps/iSfvB7PjJwK2Phj87">Chemin du Vallon 17, 1030 BUSSIGNY</option>
+            </select>
+          
+            <label for="totalPrice">Prix total de la location :</label>
+            <input type="text" id="totalPrice" value="" style="padding: 10px; border: 1px solid #ccc; border-radius: 4px;">
+            <label for="totalPrice">Caution :</label>
+            <input type="text" id="caution" value="200" style="padding: 10px; border: 1px solid #ccc; border-radius: 4px;">
+            <br>
+            <label for="equipment" style="text-align: center;">équipement loué :</label>
+            <br>
+            <label for="partybox710Qty">JBL Partybox 710:</label>
+            <input type="number" id="partybox710Qty" name="partybox710Qty" min="0" value="0" style="padding: 10px; border: 1px solid #ccc; border-radius: 4px;">
+          
+            <label for="soundboksQty">Soundboks 3:</label>
+            <input type="number" id="soundboksQty" name="soundboksQty" min="0" value="0" style="padding: 10px; border: 1px solid #ccc; border-radius: 4px;">
+          
+            <label for="partybox100Qty">JBL Partybox 100:</label>
+            <input type="number" id="partybox100Qty" name="partybox100Qty" min="0" value="0" style="padding: 10px; border: 1px solid #ccc; border-radius: 4px;">
+            <label for="options">Options (Micros, lasers, pieds, Livraison):</label>
+            <input type="text" id="options" value="" style="padding: 10px; border: 1px solid #ccc; border-radius: 4px;"><br>
+
+            <div style="display: flex; justify-content: space-between; align-items: center; margin-top: 20px;">
+                <input type="submit" value="Générer le mail" style="background-color: #3f51b5; color: white; padding: 10px 20px; border: none; border-radius: 4px; cursor: pointer; font-size: 16px;">
+                <button id="copyToClipboard" type="button" style="background-color: #3f51b5; color: white; padding: 10px 20px; border: none; border-radius: 4px; cursor: pointer; font-size: 16px;">Copier</button>
+            </div>
+        </div>
+    </form>
+    <br>
+    <div id="output" style="background-color: white; border: 4px solid rgb(255, 255, 255); margin: 100px; padding: 20px;"></div>
+    <script>
+
+        function getSelectedGender() {
+            const selectedGender = document.querySelector('input[name="gender"]:checked').value;
+            console.log(selectedGender);
+            return selectedGender;
+        }
+
+        function copyToClipboard(html) {
+            const container = document.createElement('div');
+            container.innerHTML = '<style>* { color: initial !important; }</style>' + html;
+            container.style.position = 'fixed';
+            container.style.pointerEvents = 'none';
+            container.style.opacity = 0;
+            container.style.backgroundColor = 'white'; // Set the background color to white
+            document.body.appendChild(container);
+            
+            const range = document.createRange();
+            range.selectNode(container);
+            const selection = window.getSelection();
+            selection.removeAllRanges();
+            selection.addRange(range);
+            
+            document.execCommand('copy');
+            document.body.removeChild(container);
+        }
+
+        function generateEmail() {
+            const gender = getSelectedGender();
+            const names = document.getElementById("names").value;
+            const time = document.getElementById("time").value;
+            const date = document.getElementById("date").value;
+            const caution = document.getElementById("caution").value;
+            const addressOption = document.getElementById("address").value.split('|');
+            const address = addressOption[0];
+            const addressLink = addressOption[1];
+            const totalPrice = document.getElementById("totalPrice").value;
+            const options = document.getElementById("options").value;
+
+            document.getElementById('copyToClipboard').addEventListener('click', function() {
+                copyToClipboard(emailContent);
+                alert('Email copié dans le presse-Papier');
+            });
+
+            let partybox710Qty = document.getElementById("partybox710Qty").value;
+            let soundboksQty = document.getElementById("soundboksQty").value;
+            let partybox100Qty = document.getElementById("partybox100Qty").value;
+
+            let equipmentList = '';
+            let partyBox710Image = '';
+            let soundBoks3Image = '';
+            let partybox100Image = '';
+
+            if (partybox710Qty > 0) {
+                equipmentList += `- JBL Partybox 710 (${partybox710Qty})<br>`;
+                partyBox710Image = `
+                <div style="outline: none; box-sizing: content-box; line-height: initial;">
+                    <a href="https://fr.jbl.com/on/demandware.static/-/Sites-masterCatalog_Harman/fr_FR/v1677545117296/pdfs/JBL_PARTYBOX%C2%A0710_OM_SOP_FR_V6.pdf" target="_blank" rel="noopener noreferrer" style="outline: none; box-sizing: content-box; text-decoration-line: none; background-color: transparent; cursor: pointer; line-height: inherit; color: #1d6cb1;">
+                        <img class="gmail-" style="outline: none; box-sizing: content-box; vertical-align: middle; border-style: none; line-height: initial;" src="https://airsoundlocation.ch/wp-content/uploads/2023/04/small_partybox_710.png" alt="" width="250" height="200">
+                    </a>
+                    <br style="outline: none; box-sizing: content-box; line-height: initial;">
+                </div>
+                <br>
+                <span class="gmail-" style="outline: none; box-sizing: content-box; line-height: initial; color: #333333; font-family: Roboto, sans-serif; font-size: 17px;">MODE D'EMPLOI JBL PARTYBOX 710</span>
+                <br>
+                <br>
+                `;
+            }
+            if (soundboksQty > 0) {
+                equipmentList += `- Soundboks 3 (${soundboksQty})<br>`;
+                soundBoks3Image = `
+                <div style="outline: none; box-sizing: content-box; line-height: initial; color: #333333; font-family: Roboto, sans-serif; font-size: 14px; text-align: center;">
+                    <a href="https://www.modesdemploi.fr/soundboks/the-new-soundboks/mode-d-emploi" target="_blank" rel="noopener noreferrer" style="outline: none; box-sizing: content-box; background-color: transparent; cursor: pointer; line-height: inherit; color: #1d6cb1;">
+                        <img style="outline: none; box-sizing: content-box; vertical-align: middle; border-style: none; line-height: initial; text-decoration-line: none;" src="https://soundboks.imgix.net/SB3_3-82c39cbd6f9bbf8dcc28424ffde0455f.png?w=400" alt="" width="200" height="200">
+                    </a>
+                </div>
+                <span class="gmail-" style="outline: none; box-sizing: content-box; line-height: initial; color: #333333; font-family: Roboto, sans-serif; font-size: 17px;">MODE D'EMPLOI SOUNDBOKS 3</span>
+                <br>
+                <br>
+                `;
+            }
+            if (partybox100Qty > 0) {
+                equipmentList += `- JBL Partybox 100 (${partybox100Qty})<br>`;
+                partybox100Image = `
+                <div style="outline: none; box-sizing: content-box; line-height: initial; color: #333333; font-family: Roboto, sans-serif; font-size: 14px; text-align: center;">
+                    <a href="https://media.flixcar.com/f360cdn/Harman_Kardon-106315429-JBL_PartyBox_100_Owners-20Manual_FR.pdf" target="_blank" rel="noopener noreferrer" style="outline: none; box-sizing: content-box; background-color: transparent; cursor: pointer; line-height: inherit; color: #1d6cb1;">
+                        <img style="outline: none; box-sizing: content-box; vertical-align: middle; border-style: none; line-height: initial; text-decoration-line: none;" src="https://airsoundlocation.ch/wp-content/uploads/2022/08/JBL_partybox_100-e1669231078659.png" alt="" width="200" height="200">
+                    </a>
+                </div>
+                <br>
+                <span class="gmail-" style="outline: none; box-sizing: content-box; line-height: initial; color: #333333; font-family: Roboto, sans-serif; font-size: 17px;">MODE D'EMPLOI JBL PARTYBOX 100</span>
+                `;
+            }
+            if (options != ''){
+                equipmentList += `- Options : ` + options;
+            }
+
+            let emailContent = `
+            <div>
+                <img style="display: block; margin-left: auto; margin-right: auto;" src="https://airsoundlocation.ch/wp-content/uploads/2021/12/logoblack.png" alt="Logo" width="300" height="300">
+            </div>
+            <div style="text-align: center; font-family: verdana, geneva, sans-serif;" class="spacing">
+                <span class="gmail-" style="outline: none; box-sizing: content-box; line-height: initial; color: #333333; font-size: 14pt;">
+                    ${gender} ${names},
+                    <br>
+                    <br>
+                    <br>
+                    <strong>
+                        <span style="font-size: 18pt;">Votre réservation à bien été prise en compte ! *</span>
+                    </strong>
+                    <br>
+                    <br>
+                    <br>
+                    <span style="font-size: 12pt;" class="spacing">Vous pourrez venir chercher le matériel dès</span>
+                    <br>
+                    <br>
+                    <strong>
+                        <span style="font-size: 18pt;">${time}</span>
+                    </strong>
+                    <br>
+                    <br>
+                    <span style="font-size: 12pt;" class="spacing">le</span>
+                    <br>
+                    <br>
+                    <strong>
+                        <span style="font-size: 18pt;">${date}</span>
+                    </strong>
+                    <br>
+                    <br>
+                    <span style="font-size: 12pt;" class="spacing">à l'adresse suivante</span>
+                </span>
+                <br>
+                <br>
+                <br>
+                <span style="outline: none; box-sizing: content-box; line-height: initial; color: #333333; font-family: Roboto, sans-serif; font-size: 18px; text-align: center;">
+                    <a href="${addressLink}" target="_blank" class="cloudHQ__gmail_elements_final_btn
+                    " style="outline: none; box-sizing: border-box; text-decoration-line: none; background-color: #cc02f5; cursor: pointer; line-height: 44px; color: #ffffff; border-radius: 3px; font-weight: bold; padding: 12px 24px; text-transform: uppercase; vertical-align: middle; title=Adresse">${address}</a>
+                </span>
+                <br>
+                <br>
+                <br>
+            </div>
+            <div style="outline: none; box-sizing: content-box; line-height: initial; text-align: center; font-family: Roboto;">
+                <span class="gmail-" style="outline: none; box-sizing: content-box; line-height: initial; font-size: 18pt;">* 
+                    <span class="gmail-" style="outline: none; box-sizing: content-box; line-height: initial; font-size: 18pt; font-weight: bolder; font-family: verdana, geneva, sans-serif;">PENSEZ À VOUS MUNIR</span>
+                </span>
+                <br>
+                <br>
+                <br>
+                <div style="outline: none; box-sizing: content-box; line-height: initial;">
+                    <span class="gmail-" style="outline: none; box-sizing: content-box; line-height: initial; font-family: verdana, geneva, sans-serif;">
+                        <span class="gmail-" style="outline: none; box-sizing: content-box; line-height: initial; font-size: 12pt;">1) D'un document d'identité officiel</span>
+                    </span> 
+                    <br style="outline: none; box-sizing: content-box; line-height: initial;">
+                </div>
+                <div style="outline: none; box-sizing: content-box; line-height: initial;">
+                    <span class="gmail-" style="outline: none; box-sizing: content-box; line-height: initial; font-size: 12pt; font-family: verdana, geneva, sans-serif;">
+                        2) D'un moyen pour régler la caution (Cash ou Twint) : 
+                    </span>
+                    <span class="gmail-" style="outline: none; box-sizing: content-box; line-height: initial; color: #800080;">
+                      <span class="gmail-" style="outline: none; box-sizing: content-box; line-height: initial; font-size: 18pt;">
+                        <em style="outline: none; box-sizing: content-box; line-height: initial;">
+                          <span style="outline: none; box-sizing: content-box; font-weight: bolder; line-height: initial;">${caution}.-</span>
+                        </em>
+                      </span>
+                    </span> 
+                    <br style="outline: none; box-sizing: content-box; line-height: initial;">
+                </div>
+                <br>
+                <br>
+                <br>
+                <div style="outline: none; box-sizing: content-box; line-height: initial;">
+                    <span class="gmail-" style="outline: none; box-sizing: content-box; line-height: initial; font-size: 20pt;">Retour possible le jour suivant</span> 
+                    <br style="outline: none; box-sizing: content-box; line-height: initial;">
+                </div>
+                <br>
+                <hr style="height: 2px; border-width: 0; background-color: purple;">
+
+            </div>
+            <div style="outline: none; box-sizing: content-box; line-height: initial; text-align: center; font-family: 'Montserrat', sans-serif">
+
+                <br>
+                <span class="gmail-" style="outline: none; box-sizing: content-box; line-height: initial; font-size: 10pt;">
+                    <span class="gmail-" style="outline: none; box-sizing: content-box; line-height: initial; font-size: 12pt;">Votre réservation concerne la location du matériel suivant :</span>
+                </span> 
+                <br>
+                <br>
+                <div style="outline: none; box-sizing: content-box; line-height: initial;">
+                    <span style="outline: none; box-sizing: content-box; line-height: initial; font-size: 12pt;">  
+                        ${equipmentList}
+                    </span>
+                </div>
+                <br>
+                <span class="gmail-" style="outline: none; box-sizing: content-box; line-height: initial; font-size: 12pt;">Pour un total de</span> 
+                <span style="outline: none; box-sizing: content-box; font-weight: bolder; line-height: initial; color: #800080; font-size: 14pt;">${totalPrice}.-</span>
+                <br>
+                <br>
+                
+                <hr style="height: 2px; border-width: 0; background-color: purple;">
+                <br>
+                <br>
+                
+                <div style="outline: none; box-sizing: content-box; line-height: initial;">
+                  <span class="gmail-" style="outline: none; box-sizing: content-box; line-height: initial;">
+                    <span class="gmail-" style="outline: none; box-sizing: content-box; line-height: initial; font-size: 10pt;">Veuillez prendre connaissance des documents ci joints</span>
+                  </span> 
+                  <br style="outline: none; box-sizing: content-box; line-height: initial;">
+                </div>
+                <br>
+                <div style="outline: none; box-sizing: content-box; line-height: initial;">
+                  <span style="outline: none; box-sizing: content-box; font-weight: bolder; line-height: initial;">
+                    <span class="gmail-" style="outline: none; box-sizing: content-box; line-height: initial;">-Conditions générales de location du matériel 
+                      <a href="https://airsoundlocation.ch/conditions-generales/" target="_blank" rel="noopener noreferrer" style="outline: none; box-sizing: content-box; text-decoration-line: none; background-color: transparent; cursor: pointer; line-height: inherit; color: #1d6cb1;">ici</a>
+                    </span>
+                  </span> 
+                  <br style="outline: none; box-sizing: content-box; line-height: initial;">
+                </div>
+                <div style="outline: none; box-sizing: content-box; line-height: initial;">
+                  <span style="outline: none; box-sizing: content-box; font-weight: bolder; line-height: initial;">
+                    <span class="gmail-" style="outline: none; box-sizing: content-box; line-height: initial;">-La ou les notices d'utilisation du matériel</span>
+                  </span> 
+                  <br style="outline: none; box-sizing: content-box; line-height: initial;">
+                </div>
+                <div style="outline: none; box-sizing: content-box; line-height: initial;">
+                  <span style="outline: none; box-sizing: content-box; font-weight: bolder; line-height: initial;">
+                    <span class="gmail-" style="outline: none; box-sizing: content-box; line-height: initial;">
+                      <br style="outline: none; box-sizing: content-box; line-height: initial;">
+                    </span>
+                  </span>
+                </div>
+                <img class="gmail-" style="outline: none; box-sizing: content-box; vertical-align: middle; border-style: none; line-height: initial;" src="https://ci3.googleusercontent.com/proxy/4GuQ97bS8IRZIAjTsXUTvqpul8l1SFFD1KHO9eNAopm_TqtRrN11C7mO5yaJ8dciIoMrXqFjLI2ZhPp9-gdilcaB65Gie1mcA6yFp6oDMoZG669TP29tBK8gZt_VFdzDNA=s0-d-e1-ft#https://airsoundlocation.ch/wp-content/uploads/2021/12/fleche_violette_bas.png" alt="" width="48" height="48">     
+                <br>
+                <br>
+                ${partyBox710Image}
+                ${soundBoks3Image}
+                ${partybox100Image}
+                <br>
+                <br>
+                <br>
+                <hr style="height: 2px; border-width: 0; background-color: purple;">
+                <br>
+                <div style="outline: none; box-sizing: content-box; line-height: initial;">
+                  <span class="gmail-" style="outline: none; box-sizing: content-box; line-height: initial; font-size: 10pt;">
+                    <em style="outline: none; box-sizing: content-box; line-height: initial;">
+                      <span class="gmail-" style="outline: none; box-sizing: content-box; line-height: initial; font-family: verdana, geneva, sans-serif;">Partagez votre expérience de location chez AirSound sur:</span>
+                    </em>
+                  </span> 
+                  <br style="outline: none; box-sizing: content-box; line-height: initial;">
+                </div>
+                <br>
+                <br>
+                <br>
+                <div style="outline: none; box-sizing: content-box; line-height: initial;">
+                  <a href="https://www.instagram.com/airsoundlocation/" target="_blank" rel="noopener noreferrer" style="outline: none; box-sizing: border-box; text-decoration-line: none; background-color: #8802f5; cursor: pointer; line-height: 40px; color: #ffffff; border: 0px solid #7700ff; border-radius: 3px; font-size: 13px; font-weight: bold; padding: 12px 24px; text-transform: uppercase; vertical-align: middle;">INSTAGRAM</a> 
+                  <br style="outline: none; box-sizing: content-box; line-height: initial;">
+                </div>
+                <br>
+                <div style="outline: none; box-sizing: content-box; line-height: initial;">
+                  <a href="https://goo.gl/maps/SWcufX1maP3g6twD8" target="_blank" rel="noopener noreferrer" style="outline: none; box-sizing: border-box; text-decoration-line: none; background-color: #8802f5; cursor: pointer; line-height: 40px; color: #ffffff; border: 0px solid #7700ff; border-radius: 3px; font-size: 13px; font-weight: bold; padding: 12px 24px; text-transform: uppercase; vertical-align: middle;">GOOGLE MAPS</a> 
+                  <br style="outline: none; box-sizing: content-box; line-height: initial;">
+                </div>
+                <br>
+                <br>
+                <hr style="height: 2px; border-width: 0; background-color: purple;">
+                <br>
+                <br>
+                <div style="outline: none; box-sizing: content-box; line-height: initial;">
+                  <span class="gmail-" style="outline: none; box-sizing: content-box; line-height: initial; font-family: verdana, geneva, sans-serif;">L'équipe AirSound Location vous remercie et reste à votre entière disposition pour toutes questions sur la réservation ou autres !</span> 
+                  <br style="outline: none; box-sizing: content-box; line-height: initial;">
+                </div>
+                <br>
+                <div style="outline: none; box-sizing: content-box; line-height: initial;">
+                  <span class="gmail-" style="outline: none; box-sizing: content-box; line-height: initial; font-family: arial, helvetica, sans-serif;">
+                    <a href="https://airsoundlocation.ch/" target="_blank" rel="noopener noreferrer" style="outline: none; box-sizing: border-box; text-decoration-line: none; background-color: #cc02f5; cursor: pointer; line-height: 44px; color: #ffffff; border-radius: 3px; font-size: 13px; font-weight: bold; padding: 12px 24px; vertical-align: middle;">airsoundlocation.ch</a>
+                  </span> 
+                  <br style="outline: none; box-sizing: content-box; line-height: initial;">
+                </div>
+                <br>
+                <br>
+                <br>
+                <br>
+            </div>
+            `;
+
+            document.getElementById("output").innerHTML = emailContent;
+            return false; // Prevent the form from submitting and refreshing the page 
+        }
+    </script>
 </body>
 </html>
