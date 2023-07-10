@@ -113,7 +113,7 @@
             <input type="text" id="date_pickup_display" hidden style="padding: 10px; border: 1px solid #ccc; border-radius: 4px;">
 
             <label for="delivery_address" id="delivery_address_label" style="display: none;">Adresse (🚚) :</label>
-            <input type="text" id="delivery_address" name="delivery_address" placeholder="Remplir si livraison" style="display: none; padding: 10px; border: 1px solid #ccc; border-radius: 4px;">
+            <input type="text" id="delivery_address" name="delivery_address" placeholder="Adresse de livraison" style="display: none; padding: 10px; border: 1px solid #ccc; border-radius: 4px;">
             
             <br>
             <label style="text-align: center;">reprise :</label>
@@ -232,17 +232,21 @@
             const names = document.getElementById("names").value;
             const time_pickup = document.getElementById("time_pickup").value;
             const date_pickup = document.getElementById("date_pickup_display").value;
+            const time_return = document.getElementById("time_return").value;
+            const date_return = document.getElementById("date_return_display").value;
             const caution = document.getElementById("caution").value;
             const addressOption = document.getElementById("address").value.split('|');
             address = addressOption[0];
             addressLink = addressOption[1];
+            action_text_for_pickup = "Vous pourrez venir chercher le matériel à";
             
             if (document.getElementById("address").value === 'Livraison') {
                 address = document.getElementById("delivery_address").value;
                 const addressMapsFormat = address.replace(/\s+/g, "+");
+                action_text_for_pickup = "Nous vous livrerons le matériel à"
                 addressLink = "https://www.google.com/maps/search/" + addressMapsFormat;
             }
-            
+
             const totalPrice = document.getElementById("totalPrice").value;
             const options = document.getElementById("options").value;
 
@@ -315,7 +319,7 @@
                     <br>
                     <br>
                     <br>
-                    <span style="font-size: 12pt;" class="spacing">Vous pourrez venir chercher le matériel à</span>
+                    <span style="font-size: 12pt;" class="spacing">${action_text_for_pickup}</span>
                     <br>
                     <br>
                     <strong>
@@ -364,7 +368,7 @@
                     <span class="gmail-" style="outline: none; box-sizing: content-box; line-height: initial; color: #800080;">
                       <span class="gmail-" style="outline: none; box-sizing: content-box; line-height: initial; font-size: 18pt;">
                         <em style="outline: none; box-sizing: content-box; line-height: initial;">
-                          <span style="outline: none; box-sizing: content-box; font-weight: bolder; line-height: initial;">${caution}.-</span>
+                          <span style="font-family: verdana, geneva, sans-serif; font-weight: bolder;">${caution}.-</span>
                         </em>
                       </span>
                     </span> 
@@ -373,9 +377,26 @@
                 <br>
                 <br>
                 <br>
-                <div style="outline: none; box-sizing: content-box; line-height: initial;">
-                    <span class="gmail-" style="outline: none; box-sizing: content-box; line-height: initial; font-size: 20pt;">Retour possible le jour suivant</span> 
-                    <br style="outline: none; box-sizing: content-box; line-height: initial;">
+                <div style="outline: none; box-sizing: content-box; line-height: initial; color: initial;">
+                  <span class="gmail-" style="outline: none; box-sizing: content-box; line-height: initial; font-size: 16pt; color: initial; font-family: verdana, geneva, sans-serif;">Retour prévu le
+                    <br>
+                    <br>
+                  </span>
+                </div>
+                <div style="outline: none; box-sizing: content-box; line-height: initial; color: initial;">
+                  <span style="font-size: 14pt;">
+                    <strong>
+                      <span class="gmail-" style="outline: none; box-sizing: content-box; line-height: initial; color: initial; font-family: verdana, geneva, sans-serif;">${date_return}
+                        <br>
+                      </span>
+                    </strong>
+                
+                    <strong>
+                      <span class="gmail-" style="outline: none; box-sizing: content-box; line-height: initial; color: initial; font-family: verdana, geneva, sans-serif;">
+                        <br>${time_return}
+                      </span>
+                    </strong>
+                  </span>
                 </div>
                 <br>
                 <hr style="height: 2px; border-width: 0; background-color: purple;">
