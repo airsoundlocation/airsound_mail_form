@@ -100,7 +100,7 @@
             <label for="address">Mode de retrait :</label>
             <select id="address" name="address" style="padding: 10px; border: 1px solid #ccc; border-radius: 4px;">
               <option value="Chemin du Vallon 17, 1030 BUSSIGNY|https://goo.gl/maps/iSfvB7PjJwK2Phj87">Chemin du Vallon 17, 1030 BUSSIGNY</option>
-              <option value="Livraison Voiture">Livraison 🚚</option>
+              <option value="Livraison">Livraison 🚚</option>
             </select>
             <br>
             <label style="text-align: center;">remise :</label>
@@ -185,7 +185,7 @@
             var deliveryAddressLabel = document.getElementById("delivery_address_label");
                     
             address.addEventListener('change', function() {
-                if(address.value === 'Livraison Voiture') {
+                if(address.value === 'Livraison') {
                     deliveryAddress.style.display = "block";
                     deliveryAddressLabel.style.display = "block";
                     
@@ -195,7 +195,7 @@
                 }
             });
         
-            if(address.value === 'Livraison Voiture') {
+            if(address.value === 'Livraison') {
                 deliveryAddress.style.display = "block";
             } else {
                 deliveryAddress.style.display = "none";
@@ -231,11 +231,18 @@
             const gender = getSelectedGender();
             const names = document.getElementById("names").value;
             const time_pickup = document.getElementById("time_pickup").value;
-            const date_pickup = document.getElementById("date_pickup_display ").value;
+            const date_pickup = document.getElementById("date_pickup_display").value;
             const caution = document.getElementById("caution").value;
             const addressOption = document.getElementById("address").value.split('|');
-            const address = addressOption[0];
-            const addressLink = addressOption[1];
+            address = addressOption[0];
+            addressLink = addressOption[1];
+            
+            if (document.getElementById("address").value === 'Livraison') {
+                address = document.getElementById("delivery_address").value;
+                const addressMapsFormat = address.replace(/\s+/g, "+");
+                addressLink = "https://www.google.com/maps/search/" + addressMapsFormat;
+            }
+            
             const totalPrice = document.getElementById("totalPrice").value;
             const options = document.getElementById("options").value;
 
