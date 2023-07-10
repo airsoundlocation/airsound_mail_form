@@ -24,7 +24,7 @@
             border-radius: 4px;
             color: initial;
             font-family: initial;
-        }
+        }    
 
         button {
             font-family: 'Montserrat', sans-serif;
@@ -97,24 +97,36 @@
             <label for="names">Nom Prénom (Ou entreprise) :</label>
             <input type="text" id="names" name="names" placeholder="Nom suivi du prénom" style="padding: 10px; border: 1px solid #ccc; border-radius: 4px;">
 
-            <label for="time">Heure :</label>
-            <input type="text" id="time" name="time" placeholder="hh:mm" style="padding: 10px; border: 1px solid #ccc; border-radius: 4px;">
-            
-            <label for="date">Date :</label>
-            <input type="text" id="date" name="date" placeholder="Vendredi 31 décembre" style="padding: 10px; border: 1px solid #ccc; border-radius: 4px;">
-            
-            <label for="address">Adresse :</label>
+            <label for="address">Mode de retrait :</label>
             <select id="address" name="address" style="padding: 10px; border: 1px solid #ccc; border-radius: 4px;">
-              <option value="Avenue du Silo 5, 1020 RENENS|https://goo.gl/maps/Ne67CABE8G7xaLwW8">Avenue du Silo 5, 1020 RENENS</option>
               <option value="Chemin du Vallon 17, 1030 BUSSIGNY|https://goo.gl/maps/iSfvB7PjJwK2Phj87">Chemin du Vallon 17, 1030 BUSSIGNY</option>
+              <option value="Livraison Voiture">Livraison 🚚</option>
             </select>
-          
-            <label for="totalPrice">Prix total de la location :</label>
-            <input type="text" id="totalPrice" value="" style="padding: 10px; border: 1px solid #ccc; border-radius: 4px;">
-            <label for="totalPrice">Caution :</label>
-            <input type="text" id="caution" value="200" style="padding: 10px; border: 1px solid #ccc; border-radius: 4px;">
             <br>
-            <label for="equipment" style="text-align: center;">équipement loué :</label>
+            <label style="text-align: center;">remise :</label>
+            <br>
+            <label for="time_pickup">Heure :</label>
+            <input type="text" id="time_pickup" name="time_pickup" placeholder="hh:mm" style="padding: 10px; border: 1px solid #ccc; border-radius: 4px;">
+            
+            <label for="date_pickup">Date :</label>
+            <input type="text" id="date_pickup" name="date_pickup" placeholder="Vendredi 31 décembre" style="padding: 10px; border: 1px solid #ccc; border-radius: 4px;">
+            <input type="text" id="date_pickup_display" hidden style="padding: 10px; border: 1px solid #ccc; border-radius: 4px;">
+
+            <label for="delivery_address" id="delivery_address_label" style="display: none;">Adresse (🚚) :</label>
+            <input type="text" id="delivery_address" name="delivery_address" placeholder="Remplir si livraison" style="display: none; padding: 10px; border: 1px solid #ccc; border-radius: 4px;">
+            
+            <br>
+            <label style="text-align: center;">reprise :</label>
+            <br>
+            <label for="time_return">Heure :</label>
+            <input type="text" id="time_return" name="time_return" placeholder="Laisser vide si non défini (hh:mm)" style="padding: 10px; border: 1px solid #ccc; border-radius: 4px;">
+            
+            <label for="date_return">Date :</label>
+            <input type="text" id="date_return" name="date_return" placeholder="Vendredi 31 décembre" style="padding: 10px; border: 1px solid #ccc; border-radius: 4px;">
+            <input type="text" id="date_return_display" hidden style="padding: 10px; border: 1px solid #ccc; border-radius: 4px;">
+
+            <br>
+            <label style="text-align: center;">équipement loué :</label>
             <br>
             <label for="partybox710Qty">JBL Partybox 710:</label>
             <input type="number" id="partybox710Qty" name="partybox710Qty" min="0" value="0" style="padding: 10px; border: 1px solid #ccc; border-radius: 4px;">
@@ -125,8 +137,15 @@
             <label for="partybox100Qty">JBL Partybox 100:</label>
             <input type="number" id="partybox100Qty" name="partybox100Qty" min="0" value="0" style="padding: 10px; border: 1px solid #ccc; border-radius: 4px;">
             <label for="options">Options (Micros, lasers, pieds, Livraison):</label>
-            <input type="text" id="options" value="" style="padding: 10px; border: 1px solid #ccc; border-radius: 4px;"><br>
+            <input type="text" id="options" value="" style="padding: 10px; border: 1px solid #ccc; border-radius: 4px;">
 
+            <br>
+            <label style="text-align: center;">Total :</label>
+            <br>
+            <label for="totalPrice">Prix total de la location :</label>
+            <input type="text" id="totalPrice" value="" style="padding: 10px; border: 1px solid #ccc; border-radius: 4px;">
+            <label for="totalPrice">Caution :</label>
+            <input type="text" id="caution" value="200" style="padding: 10px; border: 1px solid #ccc; border-radius: 4px;">
             <div style="display: flex; justify-content: space-between; align-items: center; margin-top: 20px;">
                 <input type="submit" value="Générer le mail" style="background-color: #3f51b5; color: white; padding: 10px 20px; border: none; border-radius: 4px; cursor: pointer; font-size: 16px;">
                 <button id="copyToClipboard" type="button" style="background-color: #3f51b5; color: white; padding: 10px 20px; border: none; border-radius: 4px; cursor: pointer; font-size: 16px;">Copier</button>
@@ -136,6 +155,52 @@
     <br>
     <div id="output" style="background-color: white; border: 4px solid rgb(255, 255, 255); margin: 100px; padding: 20px;"></div>
     <script>
+
+        window.onload = function() {
+            let datePickupInput = document.getElementById('date_pickup');
+            let datePickupDisplay = document.getElementById('date_pickup_display');
+            let dateReturnInput = document.getElementById('date_return');
+            let dateReturnDisplay = document.getElementById('date_return_display');
+        
+            datePickupInput.type = 'date';
+            dateReturnInput.type = 'date';
+        
+            datePickupInput.addEventListener('change', function() {
+                let date = new Date(this.value);
+                datePickupDisplay.style.display = "block";
+                datePickupDisplay.value = date.toLocaleDateString('fr-FR', { weekday: 'long', day: 'numeric', month: 'long' });
+            });
+        
+            dateReturnInput.addEventListener('change', function() {
+                let date = new Date(this.value);
+                dateReturnDisplay.style.display = "block";
+                dateReturnDisplay.value = date.toLocaleDateString('fr-FR', { weekday: 'long', day: 'numeric', month: 'long' });
+            });
+
+
+
+            //Display the delivery address field
+            var address = document.getElementById("address");
+            var deliveryAddress = document.getElementById("delivery_address");
+            var deliveryAddressLabel = document.getElementById("delivery_address_label");
+                    
+            address.addEventListener('change', function() {
+                if(address.value === 'Livraison Voiture') {
+                    deliveryAddress.style.display = "block";
+                    deliveryAddressLabel.style.display = "block";
+                    
+                } else {
+                    deliveryAddress.style.display = "none";
+                    deliveryAddressLabel.style.display = "none";
+                }
+            });
+        
+            if(address.value === 'Livraison Voiture') {
+                deliveryAddress.style.display = "block";
+            } else {
+                deliveryAddress.style.display = "none";
+            }
+        }
 
         function getSelectedGender() {
             const selectedGender = document.querySelector('input[name="gender"]:checked').value;
@@ -165,19 +230,14 @@
         function generateEmail() {
             const gender = getSelectedGender();
             const names = document.getElementById("names").value;
-            const time = document.getElementById("time").value;
-            const date = document.getElementById("date").value;
+            const time_pickup = document.getElementById("time_pickup").value;
+            const date_pickup = document.getElementById("date_pickup_display ").value;
             const caution = document.getElementById("caution").value;
             const addressOption = document.getElementById("address").value.split('|');
             const address = addressOption[0];
             const addressLink = addressOption[1];
             const totalPrice = document.getElementById("totalPrice").value;
             const options = document.getElementById("options").value;
-
-            document.getElementById('copyToClipboard').addEventListener('click', function() {
-                copyToClipboard(emailContent);
-                alert('Email copié dans le presse-Papier');
-            });
 
             let partybox710Qty = document.getElementById("partybox710Qty").value;
             let soundboksQty = document.getElementById("soundboksQty").value;
@@ -248,11 +308,11 @@
                     <br>
                     <br>
                     <br>
-                    <span style="font-size: 12pt;" class="spacing">Vous pourrez venir chercher le matériel dès</span>
+                    <span style="font-size: 12pt;" class="spacing">Vous pourrez venir chercher le matériel à</span>
                     <br>
                     <br>
                     <strong>
-                        <span style="font-size: 18pt;">${time}</span>
+                        <span style="font-size: 18pt;">${time_pickup}</span>
                     </strong>
                     <br>
                     <br>
@@ -260,7 +320,7 @@
                     <br>
                     <br>
                     <strong>
-                        <span style="font-size: 18pt;">${date}</span>
+                        <span style="font-size: 18pt;">${date_pickup}</span>
                     </strong>
                     <br>
                     <br>
@@ -419,6 +479,10 @@
             </div>
             `;
 
+            document.getElementById('copyToClipboard').addEventListener('click', function() {
+                copyToClipboard(emailContent);
+                alert('Email copié dans le presse-Papier');
+            });
             document.getElementById("output").innerHTML = emailContent;
             return false; // Prevent the form from submitting and refreshing the page 
         }
